@@ -15,4 +15,6 @@ Data and code will be assigned a DOI using [Zenodo.org](www.zenodo.org) once the
 
 For questions, comments or remarks about the code please contact [Gerald Page](mailto:page@graduate.uwa.edu.au).
 
-<center><img src="/readme_img/leaf_E.gif" style="width: 300px;"/>
+![Leaf Transpiration (kW m<sup>-2</sup>)](/readme_img/leaf_E.gif)
+
+Dynamic Leaf Transpiration [kW m<sup>-2</sup>]
