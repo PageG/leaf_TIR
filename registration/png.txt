@@ -1,0 +1,12 @@
+{
+ if (NR < 4)
+   { print $0 }
+ else
+   { for(i=1; i <= NF ; i++)
+     {
+      k = 256*($(i)%256)+int($(i)/256)
+      printf("%d ",k)
+     }
+     print ""
+   } 
+}
