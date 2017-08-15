@@ -9,7 +9,7 @@ Code is organized as follows:
 * transient leaf energy balance model implimented for both average leaf temperature and pixel-scale data is in `./model/` [R]
 * all data is in directory `./data/` [*.csv]
 
-Data and code will be assigned a DOI using [Zenodo.org](www.zenodo.org) once the article is accepted for publication.
+Data and code will be assigned a DOI using [Zenodo.org](http://www.zenodo.org) once the article is accepted for publication.
 
 ### Contact
 
