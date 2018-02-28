@@ -130,6 +130,9 @@ system.time({
     all_dTemp_df <- melt(all_dTemp)
     all_E <- all_dTemp_df
     
+    remove(all_dTemp)
+    remove(all_dTemp_df)
+    
     system.time({
       all_E_wide <- dcast(all_E, Var3 ~ Var1 * Var2, value.var = 'value')[,-1] # cast to seconds x 307200 data frame
     }) # 32 seconds
@@ -143,7 +146,7 @@ system.time({
     }
     d$DLTemp = spline(d$Seconds[!d$missing], measurement_error + d$DLTemp[!d$missing], xout = d$Seconds)$y
     
-    setwd(".data/whole_leaf_out_vect/")
+    setwd("../whole_leaf_out_vect/")
     all_E_file = paste0('./leaf_EA/leaf_EA_', l_i, '.rds')
     all_dTemp_file = paste0('./leaf_T/allT_', l_i, '.rds')
     
@@ -268,79 +271,94 @@ system.time({
       ## Now, reshape it from 196x307200 to 640x480xseconds (code exists above already)
       system.time({
         leaf_E1_dr <- melt(leaf_E_dr)
+        remove(leaf_E_dr); gc()
         vars <- colsplit(leaf_E1_dr$Var2, "_", c("Var1", "Var2"))
         leaf_E1_dr <- data.frame(vars$Var1, vars$Var2, leaf_E1_dr$Var1, leaf_E1_dr$value)
         names(leaf_E1_dr) <- names(all_E)
+        leaf_EA_dr <- acast(leaf_E1_dr, Var1 ~ Var2 ~ Var3, value.var = 'value') # convert back to array
+        remove(leaf_E1_dr); gc()
+        saveRDS(leaf_EA_dr, paste0('leaf_EA_dr_', l_i, '.rds')) # save transpiration array to file
+        remove(leaf_EA_dr); gc()
       }) # colsplit takes 131 seconds on the workstation
       
       leaf_E1_simple <- melt(leaf_E_simple)
+      remove(leaf_E_simple); gc()
       vars <- colsplit(leaf_E1_simple$Var2, "_", c("Var1", "Var2"))
       leaf_E1_simple <- data.frame(vars$Var1, vars$Var2, leaf_E1_simple$Var1, leaf_E1_simple$value)
       names(leaf_E1_simple) <- names(all_E)
+      leaf_EA_simple <- acast(leaf_E1_simple, Var1 ~ Var2 ~ Var3, value.var = 'value') # convert back to array
+      # remove(leaf_E1_simple); gc()
+      saveRDS(leaf_EA_simple, paste0('leaf_EA_simple_', l_i, '.rds')) # save transpiration array to file
+      remove(leaf_EA_simple); gc()
       
       leaf_E1_schym <- melt(leaf_E_schym)
       vars <- colsplit(leaf_E1_schym$Var2, "_", c("Var1", "Var2"))
       leaf_E1_schym <- data.frame(vars$Var1, vars$Var2, leaf_E1_schym$Var1, leaf_E1_schym$value)
       names(leaf_E1_schym) <- names(all_E)
+      remove(leaf_E_schym); gc()
+      leaf_EA_schym <- acast(leaf_E1_schym, Var1 ~ Var2 ~ Var3, value.var = 'value') # convert back to array
+      remove(leaf_E1_schym); gc()
+      saveRDS(leaf_EA_schym, paste0('leaf_EA_schym_', l_i, '.rds')) # save transpiration array to file
+      remove(leaf_EA_schym); gc()
       
       leaf_water1_dr <- melt(leaf_water_dr)
       leaf_water1_dr <- data.frame(vars$Var1, vars$Var2, leaf_water1_dr$Var1, leaf_water1_dr$value)
       names(leaf_water1_dr) <- names(all_E)
+      remove(leaf_water_dr); gc()
+      leaf_waterA_dr <- acast(leaf_water1_dr, Var1 ~ Var2 ~ Var3, value.var = 'value') # convert back to array
+      remove(leaf_water1_dr); gc()
+      saveRDS(leaf_waterA_dr, paste0('leaf_waterA_dr_', l_i, '.rds')) # save leaf water array to file
+      remove(leaf_waterA_dr); gc()
       
       leaf_water1_simple <- melt(leaf_water_simple)
       leaf_water1_simple <- data.frame(vars$Var1, vars$Var2, leaf_water1_simple$Var1, leaf_water1_simple$value)
       names(leaf_water1_simple) <- names(all_E)
+      remove(leaf_water_simple); gc()
+      leaf_waterA_simple <- acast(leaf_water1_simple, Var1 ~ Var2 ~ Var3, value.var = 'value') # convert back to array
+      remove(leaf_water1_simple); gc()
+      saveRDS(leaf_waterA_simple, paste0('leaf_waterA_simple_', l_i, '.rds')) # save leaf water array to file
+      remove(leaf_waterA_simple); gc
       
       leaf_water1_schym <- melt(leaf_water_schym)
       leaf_water1_schym <- data.frame(vars$Var1, vars$Var2, leaf_water1_schym$Var1, leaf_water1_schym$value)
       names(leaf_water1_schym) <- names(all_E)
+      remove(leaf_water_schym); gc()
+      leaf_waterA_schym <- acast(leaf_water1_schym, Var1 ~ Var2 ~ Var3, value.var = 'value') # convert back to array
+      remove(leaf_water1_schym); gc()
+      saveRDS(leaf_waterA_schym, paste0('leaf_waterA_schym_', l_i, '.rds')) # save leaf water array to file
+      remove(leaf_waterA_schym); gc()
       
       all_temp <- melt(all_E_wide)
       all_temp <- bind_cols(vars, all_temp)
       all_temp$variable <- rep(1:nrow(d), times = 307200)
       names(all_temp) <- names(all_E)
-      
-      system.time({
-        leaf_waterA_dr <- acast(leaf_water1_dr, Var1 ~ Var2 ~ Var3, value.var = 'value') # convert back to array
-        leaf_waterA_simple <- acast(leaf_water1_simple, Var1 ~ Var2 ~ Var3, value.var = 'value') # convert back to array
-        leaf_waterA_schym <- acast(leaf_water1_schym, Var1 ~ Var2 ~ Var3, value.var = 'value') # convert back to array
-        leaf_EA_dr <- acast(leaf_E1_dr, Var1 ~ Var2 ~ Var3, value.var = 'value') # convert back to array
-        leaf_EA_simple <- acast(leaf_E1_simple, Var1 ~ Var2 ~ Var3, value.var = 'value') # convert back to array
-        leaf_EA_schym <- acast(leaf_E1_schym, Var1 ~ Var2 ~ Var3, value.var = 'value') # convert back to array
-        leaf_temp <- acast(all_temp, Var1 ~ Var2 ~ Var3, value.var = 'value') # convert back to array
-      }) # 19 seconds
-      
-      system.time({
-        saveRDS(leaf_waterA_dr, paste0('leaf_waterA_dr_', l_i, '.rds')) # save leaf water array to file
-        saveRDS(leaf_waterA_simple, paste0('leaf_waterA_simple_', l_i, '.rds')) # save leaf water array to file
-        saveRDS(leaf_waterA_schym, paste0('leaf_waterA_schym_', l_i, '.rds')) # save leaf water array to file
+      remove(all_E_wide); gc()
+      leaf_temp <- acast(all_temp, Var1 ~ Var2 ~ Var3, value.var = 'value') # convert back to array
+      remove(all_temp); gc()
+      saveRDS(leaf_temp, paste0('allT_', l_i, '.rds')) # save interpolated temperature to file.
+      remove(leaf_temp); gc()
         
-        saveRDS(leaf_EA_dr, paste0('leaf_EA_dr_', l_i, '.rds')) # save transpiration array to file
-        saveRDS(leaf_EA_simple, paste0('leaf_EA_simple_', l_i, '.rds')) # save transpiration array to file
-        saveRDS(leaf_EA_schym, paste0('leaf_EA_schym_', l_i, '.rds')) # save transpiration array to file
-        
-        saveRDS(leaf_temp, paste0('allT_', l_i, '.rds')) # save interpolated temperature to file.
-        print(paste('Finished Leaf', l_i))
-      }) # 9 seconds
+      print(paste('Finished Leaf', l_i))
+      
     }
-    
-    # plot spatial data
-    x_min = min(apply(leaf_EA_schym[,,2], 1, function(...)min(which(!is.na(c(...))), na.rm=T), na.rm=T))/640
-    x_max = max(apply(leaf_EA_schym[,,2], 1, function(...)max(which(!is.na(c(...))), na.rm=T), na.rm=T))/640
-    y_min = min(apply(leaf_EA_schym[,,2], 2, function(...)min(which(!is.na(c(...))), na.rm=T), na.rm=T))/640
-    y_max = max(apply(leaf_EA_schym[,,2], 2, function(...)max(which(!is.na(c(...))), na.rm=T), na.rm=T))/640
-    
-    
-    system.time({
-      summed_E = apply(leaf_EA_dr, c(1,2), sum, na.rm=T)
-      summed_E[summed_E == 0] = NA
-      plot(1,1,type='n', xlim=c(x_min, x_max), ylim=c(y_min, y_max), xaxt='n', yaxt='n', bty='n', xlab='', ylab='')
-      image(summed_E, col=colm100, add=T)
-      mtext(side=3, 'Total water loss (mg)', font=2, cex=1.25)
-      fudgeit(range(c(summed_E), na.rm=T) / 44000 * 18.01528 * leaf_area / sum(!is.na(summed_E[])) * 1e3, colm100)
-      # dev.off()
-    })
-    
+    # 
+    # # plot spatial data
+    # x_min = min(apply(leaf_EA_schym[,,2], 1, function(...)min(which(!is.na(c(...))), na.rm=T), na.rm=T))/640
+    # x_max = max(apply(leaf_EA_schym[,,2], 1, function(...)max(which(!is.na(c(...))), na.rm=T), na.rm=T))/640
+    # y_min = min(apply(leaf_EA_schym[,,2], 2, function(...)min(which(!is.na(c(...))), na.rm=T), na.rm=T))/640
+    # y_max = max(apply(leaf_EA_schym[,,2], 2, function(...)max(which(!is.na(c(...))), na.rm=T), na.rm=T))/640
+    # 
+    # 
+    # system.time({
+    #   summed_E = apply(leaf_EA_schym, c(1,2), sum, na.rm=T)
+    #   summed_E[summed_E == 0] = NA
+    #   plot(1,1,type='n', xlim=c(x_min, x_max), ylim=c(y_min, y_max), xaxt='n', yaxt='n', bty='n', xlab='', ylab='')
+    #   image(summed_E, col=colm100, add=T)
+    #   mtext(side=3, 'Total water loss (mg)', font=2, cex=1.25)
+    #   fudgeit(range(c(summed_E), na.rm=T) / 44000 * 18.01528 * leaf_area / sum(!is.na(summed_E[])) * 1e3, colm100)
+    #   # dev.off()
+    # })
+    # 
   }
 
 })
