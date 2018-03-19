@@ -1,4 +1,4 @@
-# Page GFM, Li&#0233;nard JF, Pruett MJ, Moffett KB (submitted) *Spatiotemporal dynamics of leaf transpiration quantified with time-series thermal imaging*
+# Page GFM, Li&#0233;nard JF, Pruett MJ, Moffett KB (2018) *Spatiotemporal dynamics of leaf transpiration quantified with time-series thermal imaging*
 
 ## Support code and data for the article
 
@@ -9,7 +9,7 @@ Code is organized as follows:
 * transient leaf energy balance model implimented for both average leaf temperature and pixel-scale data is in `./model/` [R]
 * all data is in directory `./data/` [*.csv]
 
-Code and data from time of publication has been archived at [Zenodo.org](http://www.zenodo.org), DOI: 10.5281/zenodo.1167842
+Code and data from time of publication has been archived at [Zenodo.org](https://doi.org/10.5281/zenodo.1167842), DOI: 10.5281/zenodo.1167842
 
 ### Contact
 
