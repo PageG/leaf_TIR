@@ -13,7 +13,7 @@ Code and data from time of publication has been archived at [Zenodo.org](https:/
 
 ### Contact
 
-For questions, comments or remarks about the code please contact [Gerald Page](mailto:page@graduate.uwa.edu.au).
+For questions, comments or remarks about the code please contact [Gerald Page](mailto:pageg83@gmail.com).
 
 ![Leaf Transpiration (kW m<sup>-2</sup>)](/readme_img/leaf_E.gif)
 
